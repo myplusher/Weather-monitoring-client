@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">SmartSpace2</string>
+    <string name="title_room">Помещения</string>
+    <string name="title_microcontroller">Микроконтроллеры</string>
+    <string name="title_settings">Настройки</string>
+
+    <string name="card_action">Добавить</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
