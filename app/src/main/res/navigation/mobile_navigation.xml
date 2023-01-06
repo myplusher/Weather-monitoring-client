@@ -29,11 +29,28 @@
             android:id="@+id/navigation_microcontroller"
             android:name="com.example.smartspace2.ui.microcontrollers.MicrocontrollerFragment"
             android:label="@string/title_microcontroller"
-            tools:layout="@layout/fragment_microcontroller"/>
+            tools:layout="@layout/fragment_microcontroller">
+        <action
+            android:id="@+id/action_navigation_microcontroller_to_mc_edit"
+            app:destination="@id/mc_edit" />
+    </fragment>
 
     <fragment
             android:id="@+id/navigation_settings"
             android:name="com.example.smartspace2.ui.notifications.SettingsFragment"
             android:label="@string/title_settings"
             tools:layout="@layout/fragment_settings"/>
+
+    <fragment
+        android:id="@+id/mc_edit"
+        android:name="com.example.smartspace2.ui.microcontrollers.MCEditFragment"
+        android:label="Редактирование"
+        tools:layout="@layout/fragment_mc_edit">
+        <argument
+            android:name="id"
+            app:argType="integer" />
+        <argument
+            android:name="address"
+            app:argType="string" />
+    </fragment>
 </navigation>

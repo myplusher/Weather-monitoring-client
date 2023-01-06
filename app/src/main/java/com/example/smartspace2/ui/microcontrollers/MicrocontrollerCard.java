@@ -22,10 +22,10 @@ import com.example.smartspace2.ui.bottom_sheet.BottomSheetDialog;
 import org.jetbrains.annotations.NotNull;
 
 public class MicrocontrollerCard extends Fragment {
-    private String id;
+    private int id;
     private String address;
 
-    public MicrocontrollerCard(String id, String address) {
+    public MicrocontrollerCard(int id, String address) {
         this.id = id;
         this.address = address;
     }
@@ -44,7 +44,7 @@ public class MicrocontrollerCard extends Fragment {
                 container, false);
 
         TextView cardTitle = v.findViewById(R.id.id);
-        cardTitle.setText(id);
+        cardTitle.setText(String.valueOf(id));
 
         TextView addressTemp = v.findViewById(R.id.address);
         addressTemp.setText(address);
@@ -52,10 +52,10 @@ public class MicrocontrollerCard extends Fragment {
         Button settings = v.findViewById(R.id.button);
         settings.setOnClickListener(view -> {
             Bundle bundle = new Bundle();
-            bundle.putString("id", id);
+            bundle.putInt("id", id);
             bundle.putString("address", address);
             NavHostFragment.findNavController(MicrocontrollerCard.this)
-                    .navigate(R.id.action_microcontrollerCard_to_MCEditFragment, bundle);
+                    .navigate(R.id.action_navigation_microcontroller_to_mc_edit, bundle);
         });
 
         return v;
