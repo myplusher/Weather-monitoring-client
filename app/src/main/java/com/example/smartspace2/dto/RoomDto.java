@@ -1,6 +1,7 @@
 package com.example.smartspace2.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -14,6 +15,8 @@ public class RoomDto implements Serializable {
     private double co2;
     private double light;
     private Date date_time;
+    @SerializedName("microcontroller")
+    private MCDto microcontrollerId;
 
     public RoomDto(int id, String title, double temp, double humidity, double co2, double light, Date date_time) {
         this.title = title;
@@ -81,5 +84,13 @@ public class RoomDto implements Serializable {
 
     public void setDate_time(Date date_time) {
         this.date_time = date_time;
+    }
+
+    public MCDto getMicrocontrollerId() {
+        return microcontrollerId;
+    }
+
+    public void setMicrocontrollerId(MCDto microcontrollerId) {
+        this.microcontrollerId = microcontrollerId;
     }
 }

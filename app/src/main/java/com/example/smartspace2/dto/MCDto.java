@@ -13,6 +13,8 @@ public class MCDto {
     private String address;
     @SerializedName("short_name")
     private String shortName;
+    @SerializedName("location")
+    private String locationName;
 
     public MCDto() {}
 
@@ -41,5 +43,21 @@ public class MCDto {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getShortName() {
+        return shortName;
+    }
+
+    public void setShortName(String shortName) {
+        this.shortName = shortName;
+    }
+
+    public String getLocationName() {
+        return locationName;
+    }
+
+    public void setLocationName(String locationName) {
+        this.locationName = locationName;
     }
 }

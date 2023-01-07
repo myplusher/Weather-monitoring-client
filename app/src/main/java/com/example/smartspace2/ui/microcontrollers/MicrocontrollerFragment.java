@@ -1,6 +1,7 @@
 package com.example.smartspace2.ui.microcontrollers;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -8,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -18,6 +20,7 @@ import com.example.smartspace2.databinding.FragmentMicrocontrollerBinding;
 import com.example.smartspace2.dto.MCDto;
 import com.example.smartspace2.dto.MCListDto;
 import com.example.smartspace2.dto.RoomListDto;
+import com.example.smartspace2.service.NetworkService;
 import com.example.smartspace2.ui.rooms.RoomCard;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -26,6 +29,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MicrocontrollerFragment extends Fragment {
 
@@ -60,41 +67,32 @@ public class MicrocontrollerFragment extends Fragment {
     }
 
     private void getMC(LinearLayout linearLayout) {
+        Activity activity = getActivity();
         FragmentManager parentFragmentManager = getParentFragmentManager();
         linearLayout.removeAllViews();
-        AsyncTask.execute(() -> {
-            HttpURLConnection myConnection = null;
-            // Create URL
-            try {
-                URL url = new URL("http://192.168.1.143:8080/controllers");
-                myConnection =
-                        (HttpURLConnection) url.openConnection();
-                myConnection.setRequestMethod("GET");
-                if (myConnection.getResponseCode() == 200) {
-                    InputStream responseBody = myConnection.getInputStream();
-                    InputStreamReader responseBodyReader =
-                            new InputStreamReader(responseBody, "UTF-8");
-
-                    ObjectMapper mapper = new ObjectMapper();
-                    MCDto[] mcListDto = mapper.readValue(responseBodyReader, MCDto[].class);
-                    if (mcListDto != null && mcListDto.length != 0) {
-                        for (MCDto mcDto : mcListDto) {
-                            parentFragmentManager.beginTransaction()
-                                    .setReorderingAllowed(true)
-                                    .add(linearLayout.getId(), new MicrocontrollerCard(mcDto))
-                                    .commit();
+        NetworkService.getInstance()
+                .getJSONApi()
+                .getMCList()
+                .enqueue(new Callback<MCDto[]>() {
+                    @Override
+                    public void onResponse(Call<MCDto[]> call, Response<MCDto[]> response) {
+                        MCDto[] mcListDto = response.body();
+                        if (mcListDto != null && mcListDto.length != 0) {
+                            for (MCDto mcDto : mcListDto) {
+                                parentFragmentManager.beginTransaction()
+                                        .setReorderingAllowed(true)
+                                        .add(linearLayout.getId(), new MicrocontrollerCard(mcDto))
+                                        .commit();
+                            }
                         }
                     }
-                } else {
-                    //todo обработка ошибки
-                }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            } finally {
-                if (myConnection != null)
-                    myConnection.disconnect();
-            }
-        });
+
+                    @Override
+                    public void onFailure(Call<MCDto[]> call, Throwable t) {
+                        Toast toast = Toast.makeText(activity, t.toString(), Toast.LENGTH_LONG);
+                        toast.show();
+                    }
+                });
     }
 
     @Override

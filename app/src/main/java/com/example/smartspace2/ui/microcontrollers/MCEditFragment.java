@@ -50,33 +50,38 @@ public class MCEditFragment extends Fragment {
 
         TextView title = root.findViewById(R.id.edit_mc_name);
         EditText addressField = root.findViewById(R.id.edit_mc_address_field);
+        EditText shortNameField = root.findViewById(R.id.edit_mc_short_name_field);
         Button saveBtn = root.findViewById(R.id.mc_save);
 
         int id = 0;
         String address = "";
+        String shortName = "";
         if (getArguments() != null) {
             id = getArguments().getInt("id");
             address = getArguments().getString("address");
+            shortName = getArguments().getString("shortName");
         }
         title.setText(String.valueOf(id));
         addressField.setText(address);
+        shortNameField.setText(shortName);
 
         Activity activity = getActivity();
 
         int finalId = id;
         saveBtn.setOnClickListener(view -> {
-            saveMC(finalId, addressField.getText().toString(), root);
+            saveMC(finalId, addressField.getText().toString(), shortNameField.getText().toString(),
+                    root);
         });
 
         return root;
     }
 
-    public void saveMC(int id, String address, View view) {
+    public void saveMC(int id, String address, String shortName, View view) {
         Activity activity = getActivity();
         // todo дописать шорнейм
         NetworkService.getInstance()
                 .getJSONApi()
-                .updateMC(id, new MCDto(id, address, ""))
+                .updateMC(id, new MCDto(id, address, shortName))
                 .enqueue(new Callback<MCDto>() {
                     @Override
                     public void onResponse(Call<MCDto> call, Response<MCDto> response) {

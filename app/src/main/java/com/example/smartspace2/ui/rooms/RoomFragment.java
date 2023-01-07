@@ -1,6 +1,7 @@
 package com.example.smartspace2.ui.rooms;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.JsonReader;
@@ -8,15 +9,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+
 import com.example.smartspace2.databinding.FragmentRoomBinding;
 import com.example.smartspace2.dto.RoomDto;
 import com.example.smartspace2.dto.RoomListDto;
+import com.example.smartspace2.service.NetworkService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javax.net.ssl.HttpsURLConnection;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -25,6 +31,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class RoomFragment extends Fragment {
 
@@ -56,42 +66,32 @@ public class RoomFragment extends Fragment {
     }
 
     private void getRoomCards(LinearLayout linearLayout) {
+        Activity activity = getActivity();
         FragmentManager parentFragmentManager = getParentFragmentManager();
         linearLayout.removeAllViews();
-        AsyncTask.execute(() -> {
-            HttpURLConnection myConnection = null;
-            // Create URL
-            try {
-                URL githubEndpoint = new URL("http://192.168.1.143:8080/rooms");
-                // Create connection
-                myConnection =
-                        (HttpURLConnection) githubEndpoint.openConnection();
-                myConnection.setRequestMethod("GET");
-                if (myConnection.getResponseCode() == 200) {
-                    InputStream responseBody = myConnection.getInputStream();
-                    InputStreamReader responseBodyReader =
-                            new InputStreamReader(responseBody, "UTF-8");
-
-                    ObjectMapper mapper = new ObjectMapper();
-                    RoomDto[] roomList = mapper.readValue(responseBodyReader, RoomDto[].class);
-                    if (roomList != null && roomList.length != 0) {
-                        for (RoomDto rDto : roomList) {
-                            parentFragmentManager.beginTransaction()
-                                    .setReorderingAllowed(true)
-                                    .add(linearLayout.getId(), new RoomCard(rDto))
-                                    .commit();
+        NetworkService.getInstance()
+                .getJSONApi()
+                .getData()
+                .enqueue(new Callback<RoomDto[]>() {
+                    @Override
+                    public void onResponse(Call<RoomDto[]> call, Response<RoomDto[]> response) {
+                        RoomDto[] roomDtoList = response.body();
+                        if (roomDtoList != null && roomDtoList.length != 0) {
+                            for (RoomDto rDto : roomDtoList) {
+                                parentFragmentManager.beginTransaction()
+                                        .setReorderingAllowed(true)
+                                        .add(linearLayout.getId(), new RoomCard(rDto))
+                                        .commit();
+                            }
                         }
                     }
-                } else {
-                    //todo обработка ошибки
-                }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            } finally {
-                if (myConnection != null)
-                    myConnection.disconnect();
-            }
-        });
+
+                    @Override
+                    public void onFailure(Call<RoomDto[]> call, Throwable t) {
+                        Toast toast = Toast.makeText(activity, t.toString(), Toast.LENGTH_LONG);
+                        toast.show();
+                    }
+                });
     }
 
     @Override
