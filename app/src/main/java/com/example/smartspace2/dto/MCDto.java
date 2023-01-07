@@ -1,12 +1,15 @@
 package com.example.smartspace2.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-@JsonIgnoreProperties
-public class MCDto implements Serializable {
+public class MCDto {
+
+    @SerializedName("id")
     private int id;
+    @SerializedName("address")
     private String address;
 
     public MCDto() {}

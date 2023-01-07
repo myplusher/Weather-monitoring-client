@@ -1,6 +1,7 @@
 package com.example.smartspace2.ui.microcontrollers;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -18,6 +20,8 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.example.smartspace2.R;
 import com.example.smartspace2.databinding.FragmentMcEditBinding;
 import com.example.smartspace2.dto.MCDto;
+import com.example.smartspace2.service.ApiResponse;
+import com.example.smartspace2.service.NetworkService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
@@ -26,6 +30,10 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MCEditFragment extends Fragment {
     private FragmentMcEditBinding binding;
@@ -40,7 +48,6 @@ public class MCEditFragment extends Fragment {
         View root = binding.getRoot();
         root.findViewById(R.id.edit_mc_address_field);
 
-
         TextView title = root.findViewById(R.id.edit_mc_name);
         EditText addressField = root.findViewById(R.id.edit_mc_address_field);
         Button saveBtn = root.findViewById(R.id.mc_save);
@@ -54,52 +61,35 @@ public class MCEditFragment extends Fragment {
         title.setText(String.valueOf(id));
         addressField.setText(address);
 
+        Activity activity = getActivity();
+
         int finalId = id;
         saveBtn.setOnClickListener(view -> {
-            saveMC(finalId, addressField.getText().toString());
+            saveMC(finalId, addressField.getText().toString(), root);
         });
 
         return root;
     }
 
-    public void saveMC(int id, String address) {
-        AsyncTask.execute(() -> {
-            HttpURLConnection con = null;
-            // Create URL
-            try {
-                URL url = new URL("http://192.168.1.143:8080/controllers/"+id);
-                con =
-                        (HttpURLConnection) url.openConnection();
-                con.setDoOutput(true);
-                con.setRequestProperty(
-                        "Content-Type", "application/x-www-form-urlencoded" );
-                try(OutputStream os = con.getOutputStream()) {
-                    String body = "{\"id\":\"" + id + "\",\"address\":\"" + address + "\"}";
-                    byte[] input = body.getBytes("utf-8");
-                    os.write(input, 0, input.length);
-                }
-                con.setRequestMethod("PUT");
+    public void saveMC(int id, String address, View view) {
+        Activity activity = getActivity();
+        NetworkService.getInstance()
+                .getJSONApi()
+                .updateMC(id, new MCDto(id, address))
+                .enqueue(new Callback<MCDto>() {
+                    @Override
+                    public void onResponse(Call<MCDto> call, Response<MCDto> response) {
+                        Toast toast = Toast.makeText(activity, "Сохранено", Toast.LENGTH_SHORT);
+                        toast.show();
+                    }
 
+                    @Override
+                    public void onFailure(Call<MCDto> call, Throwable t) {
+                        Toast toast = Toast.makeText(activity, t.toString(), Toast.LENGTH_LONG);
+                        toast.show();
 
-
-                if (con.getResponseCode() == 200) {
-                    InputStream responseBody = con.getInputStream();
-                    InputStreamReader responseBodyReader =
-                            new InputStreamReader(responseBody, "UTF-8");
-
-                    ObjectMapper mapper = new ObjectMapper();
-                    MCDto[] mcListDto = mapper.readValue(responseBodyReader, MCDto[].class);
-
-                } else {
-                    //todo обработка ошибки
-                }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            } finally {
-                if (con != null)
-                    con.disconnect();
-            }
-        });
+                    }
+                });
     }
 
     @Override
