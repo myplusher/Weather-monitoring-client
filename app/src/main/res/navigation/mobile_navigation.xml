@@ -39,7 +39,14 @@
             android:id="@+id/navigation_settings"
             android:name="com.example.smartspace2.ui.notifications.SettingsFragment"
             android:label="@string/title_settings"
-            tools:layout="@layout/fragment_settings"/>
+            tools:layout="@layout/fragment_settings">
+        <action
+            android:id="@+id/action_navigation_settings_to_MCAddFragment2"
+            app:destination="@id/MCAddFragment" />
+        <action
+            android:id="@+id/action_navigation_settings_to_roomAddFragment"
+            app:destination="@id/roomAddFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/mc_edit"
@@ -53,4 +60,14 @@
             android:name="address"
             app:argType="string" />
     </fragment>
+    <fragment
+        android:id="@+id/MCAddFragment"
+        android:name="com.example.smartspace2.ui.microcontrollers.MCAddFragment"
+        android:label="MCAddFragment"
+        tools:layout="@layout/fragment_add_mc"/>
+    <fragment
+        android:id="@+id/roomAddFragment"
+        android:name="com.example.smartspace2.ui.rooms.RoomAddFragment"
+        android:label="RoomAddFragment"
+        tools:layout="@layout/fragment_add_room"/>
 </navigation>
