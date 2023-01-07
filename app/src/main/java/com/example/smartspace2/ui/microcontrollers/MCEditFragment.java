@@ -73,9 +73,10 @@ public class MCEditFragment extends Fragment {
 
     public void saveMC(int id, String address, View view) {
         Activity activity = getActivity();
+        // todo дописать шорнейм
         NetworkService.getInstance()
                 .getJSONApi()
-                .updateMC(id, new MCDto(id, address))
+                .updateMC(id, new MCDto(id, address, ""))
                 .enqueue(new Callback<MCDto>() {
                     @Override
                     public void onResponse(Call<MCDto> call, Response<MCDto> response) {

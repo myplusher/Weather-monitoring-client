@@ -11,12 +11,20 @@ public class MCDto {
     private int id;
     @SerializedName("address")
     private String address;
+    @SerializedName("short_name")
+    private String shortName;
 
     public MCDto() {}
 
-    public MCDto(int id, String address) {
+    public MCDto(int id, String address, String shortName) {
         this.id = id;
         this.address = address;
+        this.shortName = shortName;
+    }
+
+    public MCDto(String address, String shortName) {
+        this.address = address;
+        this.shortName = shortName;
     }
 
     public int getId() {
