@@ -10,6 +10,7 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface JSONPlaceHolderApi {
 // API по микроконтроллерам
@@ -27,6 +28,12 @@ public interface JSONPlaceHolderApi {
     @POST("/locations")
     public Call<LocationDto> createLocation(@Body LocationDto location);
 
-    @GET("/")
+// API по получению данных
+
+    // Метод получения данных. Если путь / - данные с микроконтроллера, если /rooms - данные с заглушки
+    @GET("/rooms")
     public Call<RoomDto[]> getData();
+
+    @GET("/history")
+    public Call<RoomDto[]> getHistory(@Query("id") int id, @Query("start") String start, @Query("end") String end);
 }
