@@ -6,18 +6,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.smartspace2.R;
 import com.example.smartspace2.dto.MCDto;
-import com.example.smartspace2.ui.bottom_sheet.BottomSheetDialog;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -25,17 +22,23 @@ public class MicrocontrollerCard extends Fragment {
     private int id;
     private String address;
     private String shortName;
+    private String locName;
+    private int locID;
 
-    public MicrocontrollerCard(int id, String address, String shortName) {
+    public MicrocontrollerCard(int id, String address, String shortName, String locName, int locID) {
         this.id = id;
         this.address = address;
         this.shortName = shortName;
+        this.locID = locID;
+        this.locName = locName;
     }
 
     public MicrocontrollerCard(MCDto item) {
         this.id = item.getId();
         this.address = item.getAddress();
-        this.shortName = item.getShortName();
+        this.shortName = item.getShortname();
+        this.locID = item.getLocationID();
+        this.locName = item.getLocationName();
     }
 
     @SuppressLint("SetTextI18n")
@@ -60,6 +63,8 @@ public class MicrocontrollerCard extends Fragment {
             bundle.putInt("id", id);
             bundle.putString("address", address);
             bundle.putString("shortName", shortName);
+            bundle.putInt("locID", locID);
+            bundle.putString("locName", locName);
             NavHostFragment.findNavController(MicrocontrollerCard.this)
                     .navigate(R.id.action_navigation_microcontroller_to_mc_edit, bundle);
         });
@@ -67,7 +72,4 @@ public class MicrocontrollerCard extends Fragment {
         return v;
     }
 
-    public void recreate() {
-
-    }
 }

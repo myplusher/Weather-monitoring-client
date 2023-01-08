@@ -1,9 +1,6 @@
 package com.example.smartspace2.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.gson.annotations.SerializedName;
-
-import java.io.Serializable;
 
 public class MCDto {
 
@@ -11,22 +8,25 @@ public class MCDto {
     private int id;
     @SerializedName("address")
     private String address;
-    @SerializedName("short_name")
-    private String shortName;
+    @SerializedName("shortname")
+    private String shortname;
     @SerializedName("location")
     private String locationName;
+    @SerializedName("location_id")
+    private int locationID;
 
     public MCDto() {}
 
-    public MCDto(int id, String address, String shortName) {
+    public MCDto(int id, String address, String shortName, String locationName) {
         this.id = id;
         this.address = address;
-        this.shortName = shortName;
+        this.shortname = shortName;
+        this.locationName = locationName;
     }
 
     public MCDto(String address, String shortName) {
         this.address = address;
-        this.shortName = shortName;
+        this.shortname = shortName;
     }
 
     public int getId() {
@@ -45,12 +45,12 @@ public class MCDto {
         this.address = address;
     }
 
-    public String getShortName() {
-        return shortName;
+    public String getShortname() {
+        return shortname;
     }
 
-    public void setShortName(String shortName) {
-        this.shortName = shortName;
+    public void setShortname(String shortname) {
+        this.shortname = shortname;
     }
 
     public String getLocationName() {
@@ -59,5 +59,13 @@ public class MCDto {
 
     public void setLocationName(String locationName) {
         this.locationName = locationName;
+    }
+
+    public int getLocationID() {
+        return locationID;
+    }
+
+    public void setLocationID(int locationID) {
+        this.locationID = locationID;
     }
 }

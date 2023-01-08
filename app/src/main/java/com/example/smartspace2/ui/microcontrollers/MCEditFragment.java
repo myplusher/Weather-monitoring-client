@@ -2,34 +2,30 @@ package com.example.smartspace2.ui.microcontrollers;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.os.AsyncTask;
+import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.smartspace2.R;
 import com.example.smartspace2.databinding.FragmentMcEditBinding;
+import com.example.smartspace2.dto.LocationDto;
 import com.example.smartspace2.dto.MCDto;
-import com.example.smartspace2.service.ApiResponse;
 import com.example.smartspace2.service.NetworkService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -51,37 +47,72 @@ public class MCEditFragment extends Fragment {
         TextView title = root.findViewById(R.id.edit_mc_name);
         EditText addressField = root.findViewById(R.id.edit_mc_address_field);
         EditText shortNameField = root.findViewById(R.id.edit_mc_short_name_field);
+        TextView currentLoc = root.findViewById(R.id.currentloc);
         Button saveBtn = root.findViewById(R.id.mc_save);
+        Spinner spinner = root.findViewById(R.id.spinner);
+
+
+
+
+        Activity activity = getActivity();
+        NetworkService.getInstance()
+                .getJSONApi()
+                .getLocations()
+                .enqueue(new Callback<LocationDto[]>() {
+                    @Override
+                    public void onResponse(Call<LocationDto[]> call, Response<LocationDto[]> response) {
+                        LocationDto[] locations = response.body();
+                        List<String> options = new ArrayList<>();
+                        for (LocationDto loc : locations) {
+                            options.add(loc.getName());
+                        }
+                        ArrayAdapter<String> adapter = new ArrayAdapter<>(activity, android.R.layout.simple_spinner_dropdown_item, options);
+                        spinner.setAdapter(adapter);
+                    }
+
+                    @Override
+                    public void onFailure(Call<LocationDto[]> call, Throwable t) {
+                        Toast toast = Toast.makeText(activity, t.toString(), Toast.LENGTH_LONG);
+                        toast.show();
+                    }
+                });
+
+
 
         int id = 0;
         String address = "";
         String shortName = "";
+        int locID = 0;
+        String locName = "";
         if (getArguments() != null) {
             id = getArguments().getInt("id");
             address = getArguments().getString("address");
             shortName = getArguments().getString("shortName");
+            locID = getArguments().getInt("shortID");
+            locName = getArguments().getString("locName");
         }
         title.setText(String.valueOf(id));
         addressField.setText(address);
         shortNameField.setText(shortName);
+        currentLoc.setText(locName);
 
-        Activity activity = getActivity();
 
         int finalId = id;
         saveBtn.setOnClickListener(view -> {
             saveMC(finalId, addressField.getText().toString(), shortNameField.getText().toString(),
-                    root);
+                    spinner.getSelectedItem().toString(), root);
         });
 
         return root;
     }
 
-    public void saveMC(int id, String address, String shortName, View view) {
+    public void saveMC(int id, String address, String shortName, String room, View view) {
         Activity activity = getActivity();
-        // todo дописать шорнейм
+
+        MCDto mcDto = new MCDto(id, address, shortName, room);
         NetworkService.getInstance()
                 .getJSONApi()
-                .updateMC(id, new MCDto(id, address, shortName))
+                .updateMC(id, mcDto)
                 .enqueue(new Callback<MCDto>() {
                     @Override
                     public void onResponse(Call<MCDto> call, Response<MCDto> response) {

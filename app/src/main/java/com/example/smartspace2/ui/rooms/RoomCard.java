@@ -26,7 +26,7 @@ public class RoomCard extends Fragment {
     private double light;
 
     public RoomCard(RoomDto roomDto) {
-        this.id = roomDto.getId();
+        this.id = roomDto.getMicrocontrollerId().getId();
         this.title = roomDto.getMicrocontrollerId().getLocationName();
         this.temp = roomDto.getTemperature();
         this.co2 = roomDto.getCo2();

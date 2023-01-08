@@ -2,7 +2,7 @@ package com.example.smartspace2.service;
 
 import retrofit2.Call;
 
-public class ApiResponse {
+public class ErrorResponse {
     private boolean ok;
     private Call<?> call;
     private Throwable throwable;

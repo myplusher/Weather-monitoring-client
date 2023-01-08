@@ -28,10 +28,13 @@ public interface JSONPlaceHolderApi {
     @POST("/locations")
     public Call<LocationDto> createLocation(@Body LocationDto location);
 
+    @GET("/locations")
+    public Call<LocationDto[]> getLocations();
+
 // API по получению данных
 
     // Метод получения данных. Если путь / - данные с микроконтроллера, если /rooms - данные с заглушки
-    @GET("/rooms")
+    @GET("/")
     public Call<RoomDto[]> getData();
 
     @GET("/history")

@@ -22,12 +22,14 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import retrofit2.Call;
@@ -114,33 +116,44 @@ public class HistoryFragment extends Fragment {
             Activity activity = getActivity();
             NetworkService.getInstance()
                     .getJSONApi()
-                    .getHistory(Integer.parseInt("2"), start, end)
+                    .getHistory(Integer.parseInt(id), start, end)
                     .enqueue(new Callback<RoomDto[]>() {
                         @Override
                         public void onResponse(Call<RoomDto[]> call, Response<RoomDto[]> response) {
-                            Toast toast = Toast.makeText(activity, "всё норм", Toast.LENGTH_LONG);
-                            toast.show();
                             RoomDto[] roomDtos = response.body();
-                            ArrayList<Entry> entries = new ArrayList<>();
-                            for (RoomDto rd : roomDtos) {
-                                entries.add(new Entry((float) rd.getDate_time().getTime()/1000, (float) rd.getTemperature()));
+                            if (roomDtos == null) {
+
+                                return;
                             }
-//                            entries.add(new Entry(1672877041918f, 25f));
-//                            entries.add(new Entry(1672877141918f, 20f));
-//                            entries.add(new Entry(1672877241918f, 14f));
-//                            entries.add(new Entry(1672877341918f, 10f));
-//                            entries.add(new Entry(1672877441918f, 18f));
-//                            entries.add(new Entry(1672877541918f, 29f));
+                            ArrayList<Entry> entriesT = new ArrayList<>();
+                            ArrayList<Entry> entriesH = new ArrayList<>();
+                            float abscT = 1672877041918f;
+                            float abscH = 1672877041918f;
+                            for (RoomDto rd : roomDtos) {
+                                entriesT.add(new Entry(abscT, (float) rd.getTemperature()));
+                                abscT += 100000;
+                            }
 
                             // На основании массива точек создадим первую линию с названием
-                            LineDataSet dataset = new LineDataSet(entries, "Температура");
-                            dataset.setDrawFilled(true);
+                            LineDataSet datasetT = new LineDataSet(entriesT, "Температура");
+                            datasetT.setDrawFilled(true);
 
-                            // Создадим переменную данных для графика
-                            LineData data = new LineData(dataset);
+                            for (RoomDto rd : roomDtos) {
+                                entriesH.add(new Entry(abscT, (float) rd.getHumidity()));
+                                abscH += 100000;
+                            }
+                            LineDataSet datasetH = new LineDataSet(entriesH, "Влажность");
+                            datasetH.setDrawFilled(true);
+
+                            List<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
+                            dataSets.add(datasetT);
+                            //dataSets.add(datasetH);
+                            LineData data = new LineData(dataSets);
+
                             // Передадим данные для графика в сам график
                             lineChart.setData(data);
                             lineChart.animateY(500);
+                            lineChart.animateX(500);
                             lineChart.getXAxis().setValueFormatter(new ValueFormatter() {
                                 @SuppressLint("SimpleDateFormat")
                                 @Override
