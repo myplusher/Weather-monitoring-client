@@ -51,6 +51,24 @@ public class RoomAddFragment extends Fragment {
                 .enqueue(new Callback<LocationDto>() {
                     @Override
                     public void onResponse(Call<LocationDto> call, Response<LocationDto> response) {
+                        if (!response.isSuccessful()) {
+                            Toast toast;
+                            switch (response.code()) {
+                                case 404:
+                                    toast = Toast.makeText(activity, "Неверный запрос", Toast.LENGTH_LONG);
+                                    toast.show();
+                                    break;
+                                case 500:
+                                    toast = Toast.makeText(activity, "Ошибка на сервере", Toast.LENGTH_LONG);
+                                    toast.show();
+                                    break;
+                                default:
+                                    toast = Toast.makeText(activity, "Непредвиденная ошибка", Toast.LENGTH_LONG);
+                                    toast.show();
+                                    break;
+                            }
+                            return;
+                        }
                         Toast toast = Toast.makeText(activity, "Сохранено", Toast.LENGTH_SHORT);
                         toast.show();
                     }

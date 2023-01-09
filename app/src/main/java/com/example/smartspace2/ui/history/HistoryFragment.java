@@ -25,13 +25,13 @@ import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
 import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -120,11 +120,26 @@ public class HistoryFragment extends Fragment {
                     .enqueue(new Callback<RoomDto[]>() {
                         @Override
                         public void onResponse(Call<RoomDto[]> call, Response<RoomDto[]> response) {
-                            RoomDto[] roomDtos = response.body();
-                            if (roomDtos == null) {
-
+                            if (!response.isSuccessful()) {
+                                Toast toast;
+                                switch (response.code()) {
+                                    case 404:
+                                        toast = Toast.makeText(activity, "Неверный запрос", Toast.LENGTH_LONG);
+                                        toast.show();
+                                        break;
+                                    case 500:
+                                        toast = Toast.makeText(activity, "Ошибка на сервере", Toast.LENGTH_LONG);
+                                        toast.show();
+                                        break;
+                                    default:
+                                        toast = Toast.makeText(activity, "Непредвиденная ошибка", Toast.LENGTH_LONG);
+                                        toast.show();
+                                        break;
+                                }
                                 return;
                             }
+                            RoomDto[] roomDtos = response.body();
+
                             ArrayList<Entry> entriesT = new ArrayList<>();
                             ArrayList<Entry> entriesH = new ArrayList<>();
                             float abscT = 1672877041918f;

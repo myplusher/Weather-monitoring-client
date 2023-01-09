@@ -29,7 +29,6 @@ public class SettingsFragment extends Fragment {
 
         Button addRoomBtn = root.findViewById(R.id.button2);
         Button addMcBtn = root.findViewById(R.id.button3);
-        Button addMechanismBtn = root.findViewById(R.id.button4);
 
         addRoomBtn.setOnClickListener(view -> {
             Bundle bundle = new Bundle();
@@ -43,9 +42,6 @@ public class SettingsFragment extends Fragment {
                     .navigate(R.id.action_navigation_settings_to_MCAddFragment2, bundle);
         });
 
-        addMechanismBtn.setOnClickListener(view -> {
-
-        });
 
         return root;
     }

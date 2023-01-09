@@ -75,6 +75,24 @@ public class RoomFragment extends Fragment {
                 .enqueue(new Callback<RoomDto[]>() {
                     @Override
                     public void onResponse(Call<RoomDto[]> call, Response<RoomDto[]> response) {
+                        if (!response.isSuccessful()) {
+                            Toast toast;
+                            switch (response.code()) {
+                                case 404:
+                                    toast = Toast.makeText(activity, "Неверный запрос", Toast.LENGTH_LONG);
+                                    toast.show();
+                                    break;
+                                case 500:
+                                    toast = Toast.makeText(activity, "Ошибка на сервере", Toast.LENGTH_LONG);
+                                    toast.show();
+                                    break;
+                                default:
+                                    toast = Toast.makeText(activity, "Непредвиденная ошибка", Toast.LENGTH_LONG);
+                                    toast.show();
+                                    break;
+                            }
+                            return;
+                        }
                         RoomDto[] roomDtoList = response.body();
                         if (roomDtoList != null && roomDtoList.length != 0) {
                             for (RoomDto rDto : roomDtoList) {
