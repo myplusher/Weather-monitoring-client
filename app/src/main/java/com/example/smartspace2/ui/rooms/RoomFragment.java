@@ -1,37 +1,19 @@
 package com.example.smartspace2.ui.rooms;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.JsonReader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-
 import com.example.smartspace2.databinding.FragmentRoomBinding;
 import com.example.smartspace2.dto.RoomDto;
-import com.example.smartspace2.dto.RoomListDto;
 import com.example.smartspace2.service.NetworkService;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import javax.net.ssl.HttpsURLConnection;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.google.android.material.snackbar.Snackbar;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -66,7 +48,6 @@ public class RoomFragment extends Fragment {
     }
 
     private void getRoomCards(LinearLayout linearLayout) {
-        Activity activity = getActivity();
         FragmentManager parentFragmentManager = getParentFragmentManager();
         linearLayout.removeAllViews();
         NetworkService.getInstance()
@@ -76,19 +57,15 @@ public class RoomFragment extends Fragment {
                     @Override
                     public void onResponse(Call<RoomDto[]> call, Response<RoomDto[]> response) {
                         if (!response.isSuccessful()) {
-                            Toast toast;
                             switch (response.code()) {
                                 case 404:
-                                    toast = Toast.makeText(activity, "Неверный запрос", Toast.LENGTH_LONG);
-                                    toast.show();
+                                    Snackbar.make(binding.getRoot(), "Неверный запрос", Snackbar.LENGTH_SHORT).show();
                                     break;
                                 case 500:
-                                    toast = Toast.makeText(activity, "Ошибка на сервере", Toast.LENGTH_LONG);
-                                    toast.show();
+                                    Snackbar.make(binding.getRoot(), "Ошибка на сервере", Snackbar.LENGTH_SHORT).show();
                                     break;
                                 default:
-                                    toast = Toast.makeText(activity, "Непредвиденная ошибка", Toast.LENGTH_LONG);
-                                    toast.show();
+                                    Snackbar.make(binding.getRoot(), "Непредвиденная ошибка", Snackbar.LENGTH_SHORT).show();
                                     break;
                             }
                             return;
@@ -96,9 +73,11 @@ public class RoomFragment extends Fragment {
                         RoomDto[] roomDtoList = response.body();
                         if (roomDtoList != null && roomDtoList.length != 0) {
                             for (RoomDto rDto : roomDtoList) {
+                                RoomCard roomCard = new RoomCard(rDto);
+                                /*roomCard.setCo*/
                                 parentFragmentManager.beginTransaction()
                                         .setReorderingAllowed(true)
-                                        .add(linearLayout.getId(), new RoomCard(rDto))
+                                        .add(linearLayout.getId(), roomCard)
                                         .commit();
                             }
                         }
@@ -106,8 +85,7 @@ public class RoomFragment extends Fragment {
 
                     @Override
                     public void onFailure(Call<RoomDto[]> call, Throwable t) {
-                        Toast toast = Toast.makeText(activity, t.toString(), Toast.LENGTH_LONG);
-                        toast.show();
+                        Snackbar.make(binding.getRoot(), t.toString(), Snackbar.LENGTH_SHORT).show();
                     }
                 });
     }

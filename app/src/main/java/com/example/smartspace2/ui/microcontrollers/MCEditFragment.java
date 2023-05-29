@@ -2,34 +2,28 @@ package com.example.smartspace2.ui.microcontrollers;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
-
+import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-
 import com.example.smartspace2.R;
 import com.example.smartspace2.databinding.FragmentMcEditBinding;
 import com.example.smartspace2.dto.LocationDto;
 import com.example.smartspace2.dto.MCDto;
 import com.example.smartspace2.service.NetworkService;
-
-import java.util.ArrayList;
-import java.util.List;
-
+import com.google.android.material.snackbar.Snackbar;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class MCEditFragment extends Fragment {
     private FragmentMcEditBinding binding;
@@ -62,36 +56,33 @@ public class MCEditFragment extends Fragment {
                     @Override
                     public void onResponse(Call<LocationDto[]> call, Response<LocationDto[]> response) {
                         if (!response.isSuccessful()) {
-                            Toast toast;
                             switch (response.code()) {
                                 case 404:
-                                    toast = Toast.makeText(activity, "Неверный запрос", Toast.LENGTH_LONG);
-                                    toast.show();
+                                    Snackbar.make(root, "Неверный запрос", Snackbar.LENGTH_SHORT).show();
                                     break;
                                 case 500:
-                                    toast = Toast.makeText(activity, "Ошибка на сервере", Toast.LENGTH_LONG);
-                                    toast.show();
+                                    Snackbar.make(root, "Ошибка на сервере", Snackbar.LENGTH_SHORT).show();
                                     break;
                                 default:
-                                    toast = Toast.makeText(activity, "Непредвиденная ошибка", Toast.LENGTH_LONG);
-                                    toast.show();
+                                    Snackbar.make(root, "Непредвиденная ошибка", Snackbar.LENGTH_SHORT).show();
                                     break;
                             }
                             return;
                         }
+
                         LocationDto[] locations = response.body();
-                        List<String> options = new ArrayList<>();
-                        for (LocationDto loc : locations) {
-                            options.add(loc.getName());
-                        }
+                        List<String> options = Stream.of(locations)
+                                .map(LocationDto::getName)
+                                .filter(Objects::nonNull)
+                                .collect(Collectors.toList());
+
                         ArrayAdapter<String> adapter = new ArrayAdapter<>(activity, android.R.layout.simple_spinner_dropdown_item, options);
                         spinner.setAdapter(adapter);
                     }
 
                     @Override
                     public void onFailure(Call<LocationDto[]> call, Throwable t) {
-                        Toast toast = Toast.makeText(activity, t.toString(), Toast.LENGTH_LONG);
-                        toast.show();
+                        Snackbar.make(root, t.toString(), Snackbar.LENGTH_SHORT).show();
                     }
                 });
 
@@ -125,8 +116,6 @@ public class MCEditFragment extends Fragment {
     }
 
     public void saveMC(int id, String address, String shortName, String room, View view) {
-        Activity activity = getActivity();
-
         MCDto mcDto = new MCDto(id, address, shortName, room);
         NetworkService.getInstance()
                 .getJSONApi()
@@ -135,32 +124,25 @@ public class MCEditFragment extends Fragment {
                     @Override
                     public void onResponse(Call<MCDto> call, Response<MCDto> response) {
                         if (!response.isSuccessful()) {
-                            Toast toast;
                             switch (response.code()) {
                                 case 404:
-                                    toast = Toast.makeText(activity, "Неверный запрос", Toast.LENGTH_LONG);
-                                    toast.show();
+                                    Snackbar.make(binding.getRoot(), "Неверный запрос", Snackbar.LENGTH_SHORT).show();
                                     break;
                                 case 500:
-                                    toast = Toast.makeText(activity, "Ошибка на сервере", Toast.LENGTH_LONG);
-                                    toast.show();
+                                    Snackbar.make(binding.getRoot(), "Ошибка на сервере", Snackbar.LENGTH_SHORT).show();
                                     break;
                                 default:
-                                    toast = Toast.makeText(activity, "Непредвиденная ошибка", Toast.LENGTH_LONG);
-                                    toast.show();
+                                    Snackbar.make(binding.getRoot(), "Непредвиденная ошибка", Snackbar.LENGTH_SHORT).show();
                                     break;
                             }
                             return;
                         }
-                        Toast toast = Toast.makeText(activity, "Сохранено", Toast.LENGTH_SHORT);
-                        toast.show();
+                        Snackbar.make(binding.getRoot(), "Сохранено", Snackbar.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onFailure(Call<MCDto> call, Throwable t) {
-                        Toast toast = Toast.makeText(activity, t.toString(), Toast.LENGTH_LONG);
-                        toast.show();
-
+                        Snackbar.make(binding.getRoot(), t.toString(), Snackbar.LENGTH_SHORT).show();
                     }
                 });
     }

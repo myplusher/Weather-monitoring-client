@@ -1,24 +1,19 @@
 package com.example.smartspace2.ui.microcontrollers;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-
 import com.example.smartspace2.R;
 import com.example.smartspace2.databinding.FragmentAddMcBinding;
-import com.example.smartspace2.databinding.FragmentAddRoomBinding;
 import com.example.smartspace2.dto.MCDto;
 import com.example.smartspace2.service.NetworkService;
-
+import com.google.android.material.snackbar.Snackbar;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -45,7 +40,6 @@ public class MCAddFragment extends Fragment {
     }
 
     public void createMC(MCDto mc) {
-        Activity activity = getActivity();
         NetworkService.getInstance()
                 .getJSONApi()
                 .createMC(mc)
@@ -53,31 +47,25 @@ public class MCAddFragment extends Fragment {
                     @Override
                     public void onResponse(Call<MCDto> call, Response<MCDto> response) {
                         if (!response.isSuccessful()) {
-                            Toast toast;
                             switch (response.code()) {
                                 case 404:
-                                    toast = Toast.makeText(activity, "Неверный запрос", Toast.LENGTH_LONG);
-                                    toast.show();
+                                    Snackbar.make(binding.getRoot(), "Неверный запрос", Snackbar.LENGTH_SHORT).show();
                                     break;
                                 case 500:
-                                    toast = Toast.makeText(activity, "Ошибка на сервере", Toast.LENGTH_LONG);
-                                    toast.show();
+                                    Snackbar.make(binding.getRoot(), "Ошибка на сервере", Snackbar.LENGTH_SHORT).show();
                                     break;
                                 default:
-                                    toast = Toast.makeText(activity, "Непредвиденная ошибка", Toast.LENGTH_LONG);
-                                    toast.show();
+                                    Snackbar.make(binding.getRoot(), "Непредвиденная ошибка", Snackbar.LENGTH_SHORT).show();
                                     break;
                             }
                             return;
                         }
-                        Toast toast = Toast.makeText(activity, "Сохранено", Toast.LENGTH_SHORT);
-                        toast.show();
+                        Snackbar.make(binding.getRoot(), "Сохранено", Snackbar.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onFailure(Call<MCDto> call, Throwable t) {
-                        Toast toast = Toast.makeText(activity, t.toString(), Toast.LENGTH_LONG);
-                        toast.show();
+                        Snackbar.make(binding.getRoot(), t.toString(), Snackbar.LENGTH_SHORT).show();
                     }
                 });
     }

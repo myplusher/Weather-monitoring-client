@@ -6,11 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import com.example.smartspace2.R;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
@@ -44,6 +41,7 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
         historyBtn.setOnClickListener(view1 -> {
             Bundle bundle = new Bundle();
             bundle.putString("id", roomId);
+            bundle.putString("name", title);
             NavHostFragment.findNavController(BottomSheetDialog.this)
                     .navigate(R.id.action_bottomSheetDialog_to_historyFragment, bundle);
             this.dismiss();

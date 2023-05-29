@@ -12,40 +12,72 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            >
-
+            tools:layout_editor_absoluteY="73dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="50dp">
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:layout_marginVertical="5dp"
                 >
-
-            <EditText
-                    android:id="@+id/date_from"
+            <Button
+                    android:id="@+id/btn_range"
+                    android:layout_width="70dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="30dp"
+                    android:drawableLeft="@drawable/outline_date_range_24"
+                    />
+            <TextView
+                    android:id="@+id/show_selected_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:hint="Начало периода"/>
-
-            <EditText
-                    android:id="@+id/date_to"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:hint="Конец периода"/>
+                    android:layout_marginStart="20dp"
+                    android:text="Выберите даты "
+                    android:textSize="18dp" />
         </LinearLayout>
-
-        <Button
-                android:id="@+id/btn_search"
-                android:layout_width="match_parent"
+        <com.google.android.material.button.MaterialButtonToggleGroup
+                app:selectionRequired="true"
+                app:checkedButton="@+id/buttonTemp"
+                android:id="@+id/toggleButton"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="Найти"/>
-
+                android:layout_marginVertical="5dp"
+                android:gravity="center">
+            <Button
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:id="@+id/buttonTemp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="°С"
+                    />
+            <Button
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:id="@+id/buttonHumidity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="φ"
+                    />
+            <Button
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:id="@+id/buttonCO2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="СО2"
+                    />
+            <Button
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:id="@+id/buttonLight"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Е"
+                    />
+        </com.google.android.material.button.MaterialButtonToggleGroup>
         <com.github.mikephil.charting.charts.LineChart
                 android:id="@+id/chart"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="60dp"
+                android:layout_height="fill_parent"
                 />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

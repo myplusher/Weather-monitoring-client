@@ -4,6 +4,7 @@ import com.example.smartspace2.dto.LocationDto;
 import com.example.smartspace2.dto.MCDto;
 import com.example.smartspace2.dto.RoomDto;
 
+import com.example.smartspace2.dto.RoomHistoryDto;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -38,5 +39,5 @@ public interface JSONPlaceHolderApi {
     public Call<RoomDto[]> getData();
 
     @GET("/history")
-    public Call<RoomDto[]> getHistory(@Query("id") int id, @Query("start") String start, @Query("end") String end);
+    public Call<RoomHistoryDto> getHistory(@Query("id") int id, @Query("start") String start, @Query("end") String end);
 }
