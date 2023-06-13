@@ -1,10 +1,7 @@
 package com.example.smartspace2.service;
 
-import com.example.smartspace2.dto.LocationDto;
-import com.example.smartspace2.dto.MCDto;
-import com.example.smartspace2.dto.RoomDto;
+import com.example.smartspace2.dto.*;
 
-import com.example.smartspace2.dto.RoomHistoryDto;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -12,6 +9,8 @@ import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+
+import java.io.File;
 
 public interface JSONPlaceHolderApi {
 // API по микроконтроллерам
@@ -40,4 +39,7 @@ public interface JSONPlaceHolderApi {
 
     @GET("/history")
     public Call<RoomHistoryDto> getHistory(@Query("id") int id, @Query("start") String start, @Query("end") String end);
+
+    @GET("/report")
+    public Call<ReportDto> getReport(@Query("id") int id, @Query("start") String start);
 }

@@ -35,6 +35,15 @@
                 android:textColor="@color/cardview_dark_background"
                 android:text="История изменений" />
         <Button
+                android:id="@+id/btn_report"
+                style="?attr/borderlessButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="viewStart"
+                android:drawableLeft="@drawable/outline_history_24"
+                android:textColor="@color/cardview_dark_background"
+                android:text="Отчёт" />
+        <Button
                 android:id="@+id/btn_microcontroller"
                 style="?attr/borderlessButtonStyle"
                 android:layout_width="match_parent"

@@ -13,6 +13,19 @@
         <action
                 android:id="@+id/action_bottomSheetDialog_to_historyFragment"
                 app:destination="@id/historyFragment"/>
+        <action
+                android:id="@+id/action_bottomSheetDialog_to_reportFragment"
+                app:destination="@id/report_fragment"/>
+    </fragment>
+
+    <fragment
+            android:id="@+id/report_fragment"
+            android:name="com.example.smartspace2.ui.report.ReportFragment"
+            android:label="Отчёт"
+            tools:layout="@layout/fragment_report">
+        <action
+                android:id="@+id/action_historyFragment_to_fragmentRoom"
+                app:destination="@id/navigation_room"/>
     </fragment>
 
     <fragment

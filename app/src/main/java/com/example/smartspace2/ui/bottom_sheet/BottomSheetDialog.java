@@ -46,5 +46,16 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
                     .navigate(R.id.action_bottomSheetDialog_to_historyFragment, bundle);
             this.dismiss();
         });
+
+        Button reportBtn = view.findViewById(R.id.btn_report);
+
+        reportBtn.setOnClickListener(view1 -> {
+            Bundle bundle = new Bundle();
+            bundle.putString("id", roomId);
+            bundle.putString("name", title);
+            NavHostFragment.findNavController(BottomSheetDialog.this)
+                    .navigate(R.id.action_bottomSheetDialog_to_reportFragment, bundle);
+            this.dismiss();
+        });
     }
 }
