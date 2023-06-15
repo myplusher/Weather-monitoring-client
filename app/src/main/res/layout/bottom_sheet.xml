@@ -40,26 +40,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAlignment="viewStart"
-                android:drawableLeft="@drawable/outline_history_24"
+                android:drawableLeft="@drawable/ic_summarize_24dp"
                 android:textColor="@color/cardview_dark_background"
                 android:text="Отчёт" />
-        <Button
-                android:id="@+id/btn_microcontroller"
-                style="?attr/borderlessButtonStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAlignment="viewStart"
-                android:drawableLeft="@drawable/ic_dashboard_black_24dp"
-                android:textColor="@color/cardview_dark_background"
-                android:text="Микроконтроллеры" />
-        <Button
-                android:id="@+id/btn_mechanism"
-                style="?attr/borderlessButtonStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAlignment="viewStart"
-                android:drawableLeft="@drawable/room_preferences_24px"
-                android:textColor="@color/cardview_dark_background"
-                android:text="Механизмы" />
     </LinearLayout>
 </LinearLayout>

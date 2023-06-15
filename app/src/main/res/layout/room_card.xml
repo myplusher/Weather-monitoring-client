@@ -54,103 +54,161 @@
                         >
 
                     <LinearLayout
-                            android:id="@+id/temp_layout"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:orientation="horizontal"
+                            android:id="@+id/temp_vlayout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_marginHorizontal="2dp"
+                            android:minWidth="70dp"
                             >
 
-                        <ImageView
-                                android:layout_width="32dp"
-                                android:layout_height="32dp"
-                                android:src="@drawable/device_thermostat_48px"
-                                android:layout_marginStart="0dp"
-                                android:layout_marginVertical="8dp"
-                                />
-
-                        <TextView
-                                android:id="@+id/card_temp"
+                        <LinearLayout
+                                android:id="@+id/temp_layout"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginVertical="10dp"
-                                android:layout_marginEnd="10dp"
-                                android:text="+3°"
-                                android:textSize="20dp"/>
+                                android:orientation="horizontal"
+                                android:paddingVertical="0dp"
+                                >
+
+                            <ImageView
+                                    android:layout_width="32dp"
+                                    android:layout_height="32dp"
+                                    android:src="@drawable/device_thermostat_48px"
+                                    />
+
+                            <TextView
+                                    android:id="@+id/card_temp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginVertical="2dp"
+                                    android:layout_marginEnd="10dp"
+                                    android:text="+3°"
+                                    android:textSize="20dp"/>
+                        </LinearLayout>
+
+                        <TextView
+                                android:id="@+id/card_tempRange"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:textSize="12dp"/>
                     </LinearLayout>
 
                     <LinearLayout
-                            android:id="@+id/humidity_layout"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:orientation="horizontal"
+                            android:id="@+id/humidity_vlayout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_marginHorizontal="2dp"
+                            android:minWidth="70dp"
                             >
 
-                        <ImageView
-                                android:layout_width="32dp"
-                                android:layout_height="32dp"
-                                android:src="@drawable/ic__humidity"
-                                android:layout_marginStart="0dp"
-                                android:layout_marginVertical="8dp"
-                                />
+                        <LinearLayout
+                                android:id="@+id/humidity_layout"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="horizontal"
+                                >
 
+                            <ImageView
+                                    android:layout_width="32dp"
+                                    android:layout_height="32dp"
+                                    android:src="@drawable/ic__humidity"
+                                    />
+
+                            <TextView
+                                    android:id="@+id/card_humidity"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginVertical="2dp"
+                                    android:layout_marginEnd="10dp"
+                                    android:text="70%"
+                                    android:textSize="20dp"/>
+                        </LinearLayout>
                         <TextView
-                                android:id="@+id/card_humidity"
-                                android:layout_width="wrap_content"
+                                android:id="@+id/card_humidityRange"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginVertical="10dp"
-                                android:layout_marginEnd="10dp"
-                                android:text="70%"
-                                android:textSize="20dp"/>
+                                android:gravity="center"
+                                android:textSize="12dp"/>
                     </LinearLayout>
 
                     <LinearLayout
-                            android:id="@+id/co2_layout"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:orientation="horizontal"
+                            android:id="@+id/co2_vlayout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_marginHorizontal="2dp"
+                            android:minWidth="70dp"
                             >
 
-                        <ImageView
-                                android:layout_width="32dp"
-                                android:layout_height="32dp"
-                                android:src="@drawable/ic_co2"
-                                android:layout_marginStart="0dp"
-                                android:layout_marginVertical="8dp"
-                                />
+                        <LinearLayout
+                                android:id="@+id/co2_layout"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="horizontal"
+                                >
 
+                            <ImageView
+                                    android:layout_width="32dp"
+                                    android:layout_height="32dp"
+                                    android:src="@drawable/ic_co2"
+                                    />
+
+                            <TextView
+                                    android:id="@+id/card_co2"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginVertical="2dp"
+                                    android:layout_marginEnd="10dp"
+                                    android:text="20%"
+                                    android:textSize="20dp"/>
+                        </LinearLayout>
                         <TextView
-                                android:id="@+id/card_co2"
-                                android:layout_width="wrap_content"
+                                android:id="@+id/card_co2Range"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginVertical="10dp"
-                                android:layout_marginEnd="10dp"
-                                android:text="20%"
-                                android:textSize="20dp"/>
+                                android:gravity="center"
+                                android:textSize="12dp"/>
                     </LinearLayout>
 
                     <LinearLayout
-                            android:id="@+id/light_layout"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:orientation="horizontal"
+                            android:id="@+id/light_vlayout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_marginHorizontal="2dp"
+                            android:minWidth="70dp"
                             >
 
-                        <ImageView
-                                android:layout_width="32dp"
-                                android:layout_height="32dp"
-                                android:src="@drawable/ic_light"
-                                android:layout_marginStart="0dp"
-                                android:layout_marginVertical="8dp"
-                                />
+                        <LinearLayout
+                                android:id="@+id/light_layout"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="horizontal"
+                                >
 
+                            <ImageView
+                                    android:layout_width="32dp"
+                                    android:layout_height="32dp"
+                                    android:src="@drawable/ic_light"
+                                    />
+
+                            <TextView
+                                    android:id="@+id/card_light"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginVertical="2dp"
+                                    android:layout_marginEnd="10dp"
+                                    android:text="500"
+                                    android:textSize="20dp"/>
+                        </LinearLayout>
                         <TextView
-                                android:id="@+id/card_light"
-                                android:layout_width="wrap_content"
+                                android:id="@+id/card_lightRange"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginVertical="10dp"
-                                android:layout_marginEnd="10dp"
-                                android:text="500"
-                                android:textSize="20dp"/>
+                                android:gravity="center"
+                                android:textSize="12dp"/>
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>

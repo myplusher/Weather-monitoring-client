@@ -11,9 +11,13 @@ public class RoomDto implements Serializable {
     private int id;
     private String title;
     private double temperature;
+    private String temperatureRange;
     private double humidity;
+    private String humidityRange;
     private double co2;
+    private String co2Range;
     private double light;
+    private String lightRange;
     private Date date_time;
     @SerializedName("microcontroller")
     private MCDto microcontrollerId;
@@ -92,5 +96,37 @@ public class RoomDto implements Serializable {
 
     public void setMicrocontrollerId(MCDto microcontrollerId) {
         this.microcontrollerId = microcontrollerId;
+    }
+
+    public String getTemperatureRange() {
+        return temperatureRange;
+    }
+
+    public void setTemperatureRange(String temperatureRange) {
+        this.temperatureRange = temperatureRange;
+    }
+
+    public String getHumidityRange() {
+        return humidityRange;
+    }
+
+    public void setHumidityRange(String humidityRange) {
+        this.humidityRange = humidityRange;
+    }
+
+    public String getCo2Range() {
+        return co2Range;
+    }
+
+    public void setCo2Range(String co2Range) {
+        this.co2Range = co2Range;
+    }
+
+    public String getLightRange() {
+        return lightRange;
+    }
+
+    public void setLightRange(String lightRange) {
+        this.lightRange = lightRange;
     }
 }

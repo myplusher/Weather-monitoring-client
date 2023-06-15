@@ -18,6 +18,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import java.util.Arrays;
+import java.util.OptionalDouble;
+import java.util.stream.Collectors;
+
 public class RoomFragment extends Fragment {
 
     private FragmentRoomBinding binding;

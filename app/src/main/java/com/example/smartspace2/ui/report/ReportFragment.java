@@ -144,9 +144,9 @@ public class ReportFragment extends Fragment {
             int positionLeft=0;
             int positionTop=0;
             for (Bitmap b : bitmapList) {
-                positionLeft = (width - b.getWidth()) / 2;
+                //positionLeft = (width - b.getWidth()) / 2;
                 canvas.drawBitmap(b, positionLeft, positionTop,null);
-                positionTop += 10 + b.getHeight();
+                positionTop += b.getHeight();
             }
             pdfView.setImageBitmap(bitmap);
         }
