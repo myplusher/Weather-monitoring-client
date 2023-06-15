@@ -22,6 +22,7 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.snackbar.Snackbar;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -117,6 +118,8 @@ public class HistoryFragment extends Fragment {
         String start = sendDateFormat.format(startDate);
         String end = sendDateFormat.format(endDate);
         LineChart lineChart = root.findViewById(R.id.chart);
+        LinearProgressIndicator progressIndicator = root.findViewById(R.id.load_chart_progress);
+        progressIndicator.setIndeterminate(true);
         NetworkService.getInstance()
                 .getJSONApi()
                 .getHistory(Integer.parseInt(id), start, end)
@@ -135,33 +138,39 @@ public class HistoryFragment extends Fragment {
                                     Snackbar.make(lineChart, "Непредвиденная ошибка", Snackbar.LENGTH_SHORT).show();
                                     break;
                             }
+                            progressIndicator.setIndeterminate(false);
                             return;
                         }
-                        dataSets.clear();
+                        try {
+                            dataSets.clear();
 
-                        RoomHistoryDto historyDto = response.body();
+                            RoomHistoryDto historyDto = response.body();
 
-                        List<HistoryItem> temperatureHistory = historyDto.getTemperatureHistory();
-                        Optional.ofNullable(getLineDataSet(temperatureHistory, "°C", Color.RED, 1))
-                                .ifPresent(dataSets::add);;
+                            List<HistoryItem> temperatureHistory = historyDto.getTemperatureHistory();
+                            Optional.ofNullable(getLineDataSet(temperatureHistory, "°C", Color.RED, 1))
+                                    .ifPresent(dataSets::add);;
 
-                        List<HistoryItem> humidityHistory = historyDto.getHumidityHistory();
-                        Optional.ofNullable(getLineDataSet(humidityHistory, "φ(%)", Color.BLUE, 1))
-                                .ifPresent(dataSets::add);
+                            List<HistoryItem> humidityHistory = historyDto.getHumidityHistory();
+                            Optional.ofNullable(getLineDataSet(humidityHistory, "φ(%)", Color.BLUE, 1))
+                                    .ifPresent(dataSets::add);
 
-                        List<HistoryItem> co2History = historyDto.getCo2History();
-                        Optional.ofNullable(getLineDataSet(co2History, "CO2(ppm*10)", Color.GRAY, 10))
-                                .ifPresent(dataSets::add);
+                            List<HistoryItem> co2History = historyDto.getCo2History();
+                            Optional.ofNullable(getLineDataSet(co2History, "CO2(ppm*10)", Color.GRAY, 10))
+                                    .ifPresent(dataSets::add);
 
-                        List<HistoryItem> lightHistory = historyDto.getLightHistory();
-                        Optional.ofNullable(getLineDataSet(lightHistory, "E(*10)", Color.GREEN, 10))
-                                .ifPresent(dataSets::add);
+                            List<HistoryItem> lightHistory = historyDto.getLightHistory();
+                            Optional.ofNullable(getLineDataSet(lightHistory, "E(*10)", Color.GREEN, 10))
+                                    .ifPresent(dataSets::add);
 
-                        updateChart(root, dataSets);
+                            updateChart(root, dataSets);
+                        } finally {
+                            progressIndicator.setIndeterminate(false);
+                        }
                     }
 
                     @Override
                     public void onFailure(Call<RoomHistoryDto> call, Throwable t) {
+                        progressIndicator.setIndeterminate(false);
                         Snackbar.make(lineChart, t.toString(), Snackbar.LENGTH_SHORT).show();
                     }
                 });

@@ -41,5 +41,5 @@ public interface JSONPlaceHolderApi {
     public Call<RoomHistoryDto> getHistory(@Query("id") int id, @Query("start") String start, @Query("end") String end);
 
     @GET("/report")
-    public Call<ReportDto> getReport(@Query("id") int id, @Query("start") String start);
+    public Call<ReportDto> getReport(@Query("id") int id, @Query("date") String date);
 }

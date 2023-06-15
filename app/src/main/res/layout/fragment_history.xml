@@ -16,6 +16,10 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginBottom="50dp">
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/load_chart_progress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

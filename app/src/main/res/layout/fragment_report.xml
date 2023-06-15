@@ -8,40 +8,70 @@
         android:id="@+id/report_fragment"
         tools:context=".ui.report.ReportFragment">
 
-    <LinearLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            tools:layout_editor_absoluteY="73dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginBottom="50dp">
+            android:layout_marginBottom="50dp"
+            >
         <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginVertical="5dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                tools:layout_editor_absoluteY="73dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 >
-            <Button
-                    android:id="@+id/btn_date"
-                    android:layout_width="70dp"
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                    android:id="@+id/load_doc_progress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="30dp"
+                    android:orientation="horizontal"
+                    android:layout_marginVertical="5dp"
+                    >
+                <Button
+                        android:id="@+id/btn_date"
+                        android:layout_width="70dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="30dp"
+                        android:drawableLeft="@drawable/outline_date_range_24"
+                        />
+                <TextView
+                        android:id="@+id/selected_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:text="Выберите дату "
+                        android:textSize="18dp" />
+            </LinearLayout>
+
+            <com.example.smartspace2.ui.customview.ZoomableImageView
+                    android:id="@+id/pdfView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    />
+
+            <Button
+                    android:id="@+id/btn_save"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_marginHorizontal="30dp"
+                    android:text="Сохранить"
                     android:drawableLeft="@drawable/outline_date_range_24"
                     />
-            <TextView
-                    android:id="@+id/selected_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:text="Выберите дату "
-                    android:textSize="18dp" />
         </LinearLayout>
-        <com.example.smartspace2.ui.customview.ZoomableImageView
-                android:id="@+id/pdfView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/white"
-                />
-    </LinearLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/floating_action_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:layout_margin="16dp"
+                app:srcCompat="@drawable/save_48px"/>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

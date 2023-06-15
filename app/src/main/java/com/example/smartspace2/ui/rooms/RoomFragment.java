@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import com.example.smartspace2.databinding.FragmentRoomBinding;
+import com.example.smartspace2.databinding.*;
 import com.example.smartspace2.dto.RoomDto;
 import com.example.smartspace2.service.NetworkService;
 import com.google.android.material.snackbar.Snackbar;
@@ -45,13 +45,13 @@ public class RoomFragment extends Fragment {
 
         binding.refreshRoomLayout.setOnRefreshListener(() -> {
             getRoomCards(linearLayout);
-            binding.refreshRoomLayout.setRefreshing(false);
         });
 
         return root;
     }
 
     private void getRoomCards(LinearLayout linearLayout) {
+        binding.refreshRoomLayout.setRefreshing(true);
         FragmentManager parentFragmentManager = getParentFragmentManager();
         linearLayout.removeAllViews();
         NetworkService.getInstance()
@@ -72,23 +72,29 @@ public class RoomFragment extends Fragment {
                                     Snackbar.make(binding.getRoot(), "Непредвиденная ошибка", Snackbar.LENGTH_SHORT).show();
                                     break;
                             }
+                            binding.refreshRoomLayout.setRefreshing(false);
                             return;
                         }
-                        RoomDto[] roomDtoList = response.body();
-                        if (roomDtoList != null && roomDtoList.length != 0) {
-                            for (RoomDto rDto : roomDtoList) {
-                                RoomCard roomCard = new RoomCard(rDto);
-                                /*roomCard.setCo*/
-                                parentFragmentManager.beginTransaction()
-                                        .setReorderingAllowed(true)
-                                        .add(linearLayout.getId(), roomCard)
-                                        .commit();
+                        try {
+                            RoomDto[] roomDtoList = response.body();
+                            if (roomDtoList != null && roomDtoList.length != 0) {
+                                for (RoomDto rDto : roomDtoList) {
+                                    RoomCard roomCard = new RoomCard(rDto);
+                                    /*roomCard.setCo*/
+                                    parentFragmentManager.beginTransaction()
+                                            .setReorderingAllowed(true)
+                                            .add(linearLayout.getId(), roomCard)
+                                            .commit();
+                                }
                             }
+                        } finally {
+                            binding.refreshRoomLayout.setRefreshing(false);
                         }
                     }
 
                     @Override
                     public void onFailure(Call<RoomDto[]> call, Throwable t) {
+                        binding.refreshRoomLayout.setRefreshing(false);
                         Snackbar.make(binding.getRoot(), t.toString(), Snackbar.LENGTH_SHORT).show();
                     }
                 });

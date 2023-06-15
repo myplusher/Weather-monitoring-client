@@ -30,6 +30,8 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.snackbar.Snackbar;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -37,6 +39,8 @@ import retrofit2.Response;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -88,6 +92,10 @@ public class ReportFragment extends Fragment {
 
         Button rangeBtn = root.findViewById(R.id.btn_date);
         rangeBtn.setOnClickListener(view -> picker.show(getParentFragmentManager(), "tag"));
+
+        FloatingActionButton fab = root.findViewById(R.id.floating_action_button);
+        fab.setOnClickListener(v -> saveFile(root));
+
 
         sendData(root, id, new Date());
 
@@ -141,11 +149,11 @@ public class ReportFragment extends Fragment {
                     Bitmap.Config.ARGB_8888);
             Canvas canvas = new Canvas(bitmap);
 
-            int positionLeft=0;
-            int positionTop=0;
+            int positionLeft = 0;
+            int positionTop = 0;
             for (Bitmap b : bitmapList) {
-                //positionLeft = (width - b.getWidth()) / 2;
-                canvas.drawBitmap(b, positionLeft, positionTop,null);
+                positionLeft = (width - b.getWidth()) / 2;
+                canvas.drawBitmap(b, positionLeft, positionTop, null);
                 positionTop += b.getHeight();
             }
             pdfView.setImageBitmap(bitmap);
@@ -155,6 +163,8 @@ public class ReportFragment extends Fragment {
     }
 
     private void sendData(View root, String id, Date startDate) {
+        LinearProgressIndicator progressIndicator = root.findViewById(R.id.load_doc_progress);
+        progressIndicator.setIndeterminate(true);
         @SuppressLint("SimpleDateFormat") SimpleDateFormat sendDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String start = sendDateFormat.format(startDate);
         NetworkService.getInstance()
@@ -175,36 +185,41 @@ public class ReportFragment extends Fragment {
                                     Snackbar.make(root, "Непредвиденная ошибка", Snackbar.LENGTH_SHORT).show();
                                     break;
                             }
+                            progressIndicator.setIndeterminate(false);
                             return;
                         }
 
-                        ReportDto body = response.body();
-                        String file = Optional.ofNullable(body)
-                                .map(ReportDto::getFile)
-                                .orElse(null);
-
-                        byte[] decodedDocument = Base64.getDecoder()
-                                .decode(file.getBytes(StandardCharsets.UTF_8));
-
-                        deleteTempFile();
-
-                        fileOut = new File(targetPdf + "temp_" + new Date().getTime() + ".pdf");
-
-                        try (FileOutputStream stream = new FileOutputStream(fileOut)) {
-                            stream.write(decodedDocument);
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-                        ImageView pdfView = root.findViewById(R.id.pdfView);
                         try {
+                            ReportDto body = response.body();
+                            String file = Optional.ofNullable(body)
+                                    .map(ReportDto::getFile)
+                                    .orElse(null);
+
+                            byte[] decodedDocument = Base64.getDecoder()
+                                    .decode(file.getBytes(StandardCharsets.UTF_8));
+
+                            deleteTempFile();
+
+                            fileOut = new File(targetPdf + "temp_" + new Date().getTime() + ".pdf");
+
+                            try (FileOutputStream stream = new FileOutputStream(fileOut)) {
+                                stream.write(decodedDocument);
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                            ImageView pdfView = root.findViewById(R.id.pdfView);
+
                             openPDF(pdfView, fileOut);
                         } catch (Exception e) {
                             e.printStackTrace();
+                        } finally {
+                            progressIndicator.setIndeterminate(false);
                         }
                     }
 
                     @Override
                     public void onFailure(Call<ReportDto> call, Throwable t) {
+                        progressIndicator.setIndeterminate(false);
                         Snackbar.make(root, t.toString(), Snackbar.LENGTH_SHORT).show();
                     }
                 });
@@ -213,5 +228,22 @@ public class ReportFragment extends Fragment {
     private void deleteTempFile() {
         if (fileOut != null && fileOut.exists())
             fileOut.delete();
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    private void saveFile(View root) {
+        if (fileOut != null && fileOut.exists()) {
+            try {
+                String fileName = "report_" + new SimpleDateFormat("dd-MM-yyyy HH-mm-ss").format(new Date()) + ".pdf";
+                Files.copy(fileOut.toPath(),
+                        (new File(targetPdf + fileName)).toPath(),
+                        StandardCopyOption.REPLACE_EXISTING);
+                Snackbar.make(root, String.format("Файл %s сохранён в %s", fileName, targetPdf), Snackbar.LENGTH_SHORT).show();
+            } catch (IOException e) {
+                Snackbar.make(root, "Не удалось сохранить файл", Snackbar.LENGTH_SHORT).show();
+            }
+        } else {
+            Snackbar.make(root, "Невозможно сохранить файл", Snackbar.LENGTH_SHORT).show();
+        }
     }
 }

@@ -22,7 +22,7 @@ public class ZoomableImageView extends androidx.appcompat.widget.AppCompatImageV
     PointF last = new PointF();
     PointF start = new PointF();
     float minScale = 1f;
-    float maxScale = 10f;
+    float maxScale = 15f;
     float[] m;
 
     float redundantXSpace, redundantYSpace;
